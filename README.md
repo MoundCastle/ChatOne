@@ -1,15 +1,4 @@
-## 待完成
-+ 数据库存储密码 加密：思路，哈希函数单向加密，比对加密后的密码是否一致，还需要密码后加“salt”，保持不同人密码加密后不一样。如：MD5
-+ 通信加密：参考https：非对称加密传递客户端生成的对称加密公钥，自己作CA，省去数字证书验证。
-+ 通信中断与恢复：暂时没想法
-+ 应用层保证信息能够按序到达：仿照TCP 在信息中添加 seq、ack字段，超时传输
-+ 服务端了解客户端的状态：心跳机制
-+ 进一步利用redis：此项目目前只利用其基于发布-订阅模式的消息队列，实现跨服务器进行消息通信模式，使用其
-+ 日志系统：完善其日志功能  **完成日志模块测试，未合并至总项目，发现muduo库带日志功能**
-+ 增加数据库连接池
-
-  
-# 聊天服务器和客户端实现，使用nginx tcp进行负载均衡，基于muduo实现，使用redis消息队列，数据库使用mysql。
+# 通信服务器和客户端实现，网络模块使用muduo库实现网络层和业务模块的解耦，数据库使用mysql关系型数据库存储，使用nginx tcp进行负载均衡，使用redis消息队列。
 
 ## 编译方式：
 1. + 清空build目录   rm -rf ./build
@@ -19,27 +8,10 @@
 2.  或者直接使用 shell脚本 AutoBuild 自动执行
 
 ## 用到的相关环境
++ 编译器：GCC 11.4.0
++ 编程语言：C++
++ 开发环境：Ubuntu 22.04.4 LTS vscode
 
-### nginx
-> nginx编译加入--with-stream参数激活tcp负载均衡模块
-> 相关配置
-> 
-> ![image](https://github.com/user-attachments/assets/370e6aae-96aa-4f39-bf15-dd7c825418fe)
- 
-### redis
-> redis支持多种不同的客户端编程语言，C++对应的则是hiredis。自行安装拷贝生成的动态库到/usr/local/lib目录下！
-> 目的：使用redis的发布-订阅机制实现不同服务器进行信息通信，避免所有的服务器进行硬链接的开销。
-
-### muduo
-> 基于muduo的客户端服务器编程
-> 完成服务器和客户端程序开发，基于muduo库的TcpServer和TcpClient更便捷。
-> 进行线程管理，muduo库提供的ThreadPool线程池管理类已经把Linux的线程创建完全封装起来了。
-
-### MySQL数据库安装
-> 本项目默认使用root 用户 密码：123456 。如要修改文件如下src/serve/db/db.cpp
-> 
-> ![image](https://github.com/user-attachments/assets/a1050477-0983-45e9-8a68-6d6cfcb495c1)
- 
 
 > ## 运行方式：
 >服务器端运行：
@@ -57,6 +29,41 @@
 ![image](https://github.com/user-attachments/assets/f8252e66-f93a-4eec-b073-c59dd9a38c7c)
 
 ![image](https://github.com/user-attachments/assets/c928dc4c-9b9d-4049-b79c-9a6e34eaf3a9)
+
+
+### muduo
+> 基于muduo的客户端服务器编程
+> 完成服务器和客户端程序开发，基于muduo库的TcpServer和TcpClient更便捷。
+> 进行线程管理，muduo库提供的ThreadPool线程池管理类已经把Linux的线程创建完全封装起来了。
+
+### MySQL数据库安装
+> 本项目默认使用root 用户 密码：123456 。如要修改文件如下src/serve/db/db.cpp
+> 
+> ![image](https://github.com/user-attachments/assets/a1050477-0983-45e9-8a68-6d6cfcb495c1)
+ 
+
+### nginx
+> nginx编译加入--with-stream参数激活tcp负载均衡模块
+> 相关配置
+> 
+> ![image](https://github.com/user-attachments/assets/370e6aae-96aa-4f39-bf15-dd7c825418fe)
+ 
+### redis 
+> 目的：使用redis的发布-订阅机制实现不同服务器进行信息通信，避免所有的服务器进行硬链接的开销。
+
+## 待完成
++ 数据库存储密码 加密：思路，哈希函数单向加密，比对加密后的密码是否一致，还需要密码后加“salt”，保持不同人密码加密后不一样。如：MD5
++ 通信加密：参考https：非对称加密传递客户端生成的对称加密公钥，自己作CA，省去数字证书验证。
++ 通信中断与恢复：暂时没想法
++ 应用层保证信息能够按序到达：仿照TCP 在信息中添加 seq、ack字段，超时传输
++ 服务端了解客户端的状态：心跳机制
++ 进一步利用redis：此项目目前只利用其基于发布-订阅模式的消息队列，实现跨服务器进行消息通信模式，使用其
++ 日志系统：完善其日志功能  **完成日志模块测试，未合并至总项目，发现muduo库带日志功能**
++ 增加数据库连接池： 可以减少数据库频繁连接断开的开销（使用redis可以避免？）
+
+  
+# 参考文献
+[1] 施磊．集群聊天服务器．图论科技.2020.7．
 
 
 
